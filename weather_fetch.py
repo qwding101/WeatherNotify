@@ -87,26 +87,27 @@ def stats(values: list) -> dict | None:
         "min": sorted_v[0],
         "max": sorted_v[-1],
         "avg": round(sum(nums) / len(nums), 1),
+        "len": len(nums),
     }
 
 # ── 組成 Email 內文 ───────────────────────────────────────────────────
 def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
-    label = "隔天" if mode == "night" else "當天"
+    # label = "隔天" if mode == "night" else "當天"
     lines = [
-        f"📅 預報日期：{target_str}　｜　地區：台北市大安區",
-        f"⏰ 統計區間：08:00 – 19:00（{label}）",
+        f"預報時地：{target_str}　08:00 – 19:00 台北市大安區",
         "",
-        "🌡️  氣溫 (°C)",
+        "🌡️  氣溫",
         f"  最高：{temp_s['max']['value']}°C　時間：{temp_s['max']['time']}",
         f"  最低：{temp_s['min']['value']}°C　時間：{temp_s['min']['time']}",
         f"  平均：{temp_s['avg']}°C",
         "",
-        "🌧️  降雨機率 (%)",
+        "🌧️  降雨率",
         f"  最高：{pop_s['max']['value']}%　時段起：{pop_s['max']['time']}",
         f"  最低：{pop_s['min']['value']}%　時段起：{pop_s['min']['time']}",
         f"  平均：{pop_s['avg']}%",
         "",
-        "── 資料來源：中央氣象署開放資料平台 ──",
+        f"氣溫資料筆數：{temp_s['len']['value']}",
+        f"降雨率資料筆數：{pop_s['len']['value']}",
     ]
     return "\n".join(lines)
 
@@ -145,7 +146,7 @@ def main():
         return
 
     body    = build_body(temp_s, pop_s, target_str, mode)
-    subject = f"🌤 台北大安區{label}天氣預報（{target_str}）"
+    subject = f"台北大安區{label}（{target_str}）天氣預報"
 
     print(body)
     send_email(subject, body)

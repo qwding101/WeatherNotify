@@ -106,8 +106,8 @@ def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
         f"  最低：{pop_s['min']['value']}%　時段起：{pop_s['min']['time']}",
         f"  平均：{pop_s['avg']}%",
         "",
-        f"氣溫資料筆數：{temp_s['len']['value']}",
-        f"降雨率資料筆數：{pop_s['len']['value']}",
+        f"氣溫資料筆數：{temp_s['len']}",
+        f"降雨率資料筆數：{pop_s['len']}",
     ]
     return "\n".join(lines)
 

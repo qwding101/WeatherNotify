@@ -111,32 +111,33 @@ def pop_style(value: float) -> str:
 # ── 組成 Email 內文 ───────────────────────────────────────────────────
 def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
     def row(label, value, time):
+        time_cell = f"Time {time}" if time else ""   # ← 有時間顯示 "Time xx:xx"，沒有就留白
         return f"""
         <tr>
             <td style="padding: 2px 16px 2px 0; color: #888;">{label}</td>
             <td style="padding: 2px 16px 2px 0;">{value}</td>
-            <td style="padding: 2px 0; color: #555;">🕐 {time}</td>
+            <td style="padding: 2px 0; color: #555;">{time_cell}</td>
         </tr>"""
 
     html = f"""
     <div style="font-family: monospace; font-size: 14px; line-height: 1.8;">
 
-        <div>🌡️ <strong>氣溫</strong></div>
+        <div>🌡️ 氣溫</div>
         <table style="border-collapse: collapse; margin-left: 16px;">
             {row("Max", temp_style(temp_s["max"]["value"]), temp_s["max"]["time"])}
             {row("Min", temp_style(temp_s["min"]["value"]), temp_s["min"]["time"])}
-            {row("Avg", temp_style(temp_s["avg"]), "—")}
+            {row("Avg", temp_style(temp_s["avg"]), "")}
         </table>
 
-        <div style="margin-top: 12px;">🌧️ <strong>降雨率</strong></div>
+        <div style="margin-top: 12px;">🌧️ 降雨率</div>
         <table style="border-collapse: collapse; margin-left: 16px;">
             {row("Max", pop_style(pop_s["max"]["value"]), pop_s["max"]["time"])}
             {row("Min", pop_style(pop_s["min"]["value"]), pop_s["min"]["time"])}
-            {row("Avg", pop_style(pop_s["avg"]), "—")}
+            {row("Avg", pop_style(pop_s["avg"]), "")}
         </table>
 
         <div style="margin-top: 16px; color: #888; font-size: 13px;">
-            資料筆數：氣溫 {temp_s["len"]}筆，降雨率 {pop_s["len"]}筆。<br>
+            資料筆數：氣溫 {temp_s["len"]} 筆，降雨率 {pop_s["len"]} 筆。<br>
             預報時地：{target_str}　08:00 – 19:00 台北市大安區
         </div>
 

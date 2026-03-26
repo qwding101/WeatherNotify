@@ -11,8 +11,8 @@ Automatically fetches weather forecast data from the Central Weather Administrat
 
 ### Notification Content
 Each email includes temperature and precipitation probability statistics for the target time window (08:00–19:00):
-- Maximum value & time of occurrence
-- Minimum value & time of occurrence
+- Maximum value and time of occurrence
+- Minimum value and time of occurrence
 - Average value
 
 ## Setup Instructions
@@ -65,7 +65,6 @@ To re-enable, click **"Enable workflow"** from the same location.
 [Central Weather Administration Open Data Platform](https://opendata.cwa.gov.tw)
 Dataset ID: `F-D0047-061` — Township-level 3-day weather forecast for Taipei City
 
----
 
 ## Acknowledgements
 This project was collaboratively developed by the repository owner and Claude AI.

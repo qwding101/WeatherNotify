@@ -94,20 +94,18 @@ def stats(values: list) -> dict | None:
 def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
     # label = "隔天" if mode == "night" else "當天"
     lines = [
-        f"預報時地：{target_str}　08:00 – 19:00 台北市大安區",
-        "",
         "🌡️  氣溫",
-        f"  最高：{temp_s['max']['value']}°C　時間：{temp_s['max']['time']}",
-        f"  最低：{temp_s['min']['value']}°C　時間：{temp_s['min']['time']}",
-        f"  平均：{temp_s['avg']}°C",
+        f"  Max: {temp_s['max']['value']}°C　Time: {temp_s['max']['time']}",
+        f"  Min: {temp_s['min']['value']}°C　Time: {temp_s['min']['time']}",
+        f"  Avg: {temp_s['avg']}°C",
         "",
         "🌧️  降雨率",
-        f"  最高：{pop_s['max']['value']}%　時段起：{pop_s['max']['time']}",
-        f"  最低：{pop_s['min']['value']}%　時段起：{pop_s['min']['time']}",
-        f"  平均：{pop_s['avg']}%",
+        f"  Max: {pop_s['max']['value']}%　Time: {pop_s['max']['time']}",
+        f"  Min: {pop_s['min']['value']}%　Time: {pop_s['min']['time']}",
+        f"  Avg: {pop_s['avg']}%",
         "",
-        f"氣溫資料筆數：{temp_s['len']}",
-        f"降雨率資料筆數：{pop_s['len']}",
+        f"資料筆數：氣溫{temp_s['len']} 筆，降雨率{pop_s['len']}筆。",
+        f"預報時地：{target_str}　08:00 – 19:00 台北市大安區",
     ]
     return "\n".join(lines)
 

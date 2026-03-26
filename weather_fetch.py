@@ -94,12 +94,12 @@ def stats(values: list) -> dict | None:
 def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
     # label = "隔天" if mode == "night" else "當天"
     lines = [
-        "🌡️  氣溫",
+        "🌡️ 氣溫",
         f"  Max: {temp_s['max']['value']}°C　Time: {temp_s['max']['time']}",
         f"  Min: {temp_s['min']['value']}°C　Time: {temp_s['min']['time']}",
         f"  Avg: {temp_s['avg']}°C",
         "",
-        "🌧️  降雨率",
+        "🌧️ 降雨率",
         f"  Max: {pop_s['max']['value']}%　Time: {pop_s['max']['time']}",
         f"  Min: {pop_s['min']['value']}%　Time: {pop_s['min']['time']}",
         f"  Avg: {pop_s['avg']}%",

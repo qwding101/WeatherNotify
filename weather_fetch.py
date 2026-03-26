@@ -143,11 +143,12 @@ def main():
         print("⚠️  找不到符合時段的預報資料。")
         return
 
-    body    = build_body(temp_s, pop_s, target_str, mode)
-    subject = f"台北大安區{label}（{target_str}）天氣預報"
+    emoji = "🌧️" if pop_s['max']['value'] >= 30 else ""
+    body  = build_body(temp_s, pop_s, target_str, mode)
+    title = f"{emoji}台北大安區{label}（{target_str}）天氣預報"
 
     print(body)
-    send_email(subject, body)
+    send_email(title, body)
 
 if __name__ == "__main__":
     main()

@@ -15,7 +15,7 @@ Each email includes temperature and precipitation probability statistics for the
 - Minimum value and time of occurrence
 - Average value
 
-## Setup Instructions
+## Setup instructions
 
 ### Step 1: Register for a CWA API key
 1. Create an account in [https://opendata.cwa.gov.tw](https://opendata.cwa.gov.tw).

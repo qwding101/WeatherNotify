@@ -1,30 +1,25 @@
 import requests
 import smtplib
 import os
+import json
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta, timezone
 
 # ── 設定 ──────────────────────────────────────────────────────────────
-API_KEY    = os.environ["CWA_API_KEY"]
-SENDER     = os.environ["EMAIL_SENDER"]
-PASSWORD   = os.environ["EMAIL_PASSWORD"]
-RECEIVER   = os.environ["EMAIL_RECEIVER"]
-MANUAL_MODE = os.environ.get("MANUAL_MODE", "")   # 手動觸發用
+API_KEY     = os.environ["CWA_API_KEY"]
+SENDER      = os.environ["EMAIL_SENDER"]
+PASSWORD    = os.environ["EMAIL_PASSWORD"]
+RECEIVER    = os.environ["EMAIL_RECEIVER"]
+MANUAL_MODE = os.environ.get("MANUAL_MODE", "")
 
-LOCATION   = "大安區"
-DATASET_ID = "F-D0047-061"    # 臺北市未來2天逐3小時預報
-BASE_URL   = "https://opendata.cwa.gov.tw/api/v1/rest/datastore"
-TZ         = timezone(timedelta(hours=8))
+LOCATION    = "大安區"
+DATASET_ID  = "F-D0047-061"
+BASE_URL    = "https://opendata.cwa.gov.tw/api/v1/rest/datastore"
+TZ          = timezone(timedelta(hours=8))
 
-# ── 判斷執行模式（night / morning）────────────────────────────────────
+# ── 判斷執行模式 ──────────────────────────────────────────────────────
 def resolve_mode() -> str:
-    """
-    手動觸發時以 MANUAL_MODE 為準。
-    自動排程時依台灣當前小時判斷：
-      UTC 15:00 → 台灣 23:00 → night
-      UTC 23:00 → 台灣 07:00 → morning
-    """
     if MANUAL_MODE in ("night", "morning"):
         return MANUAL_MODE
     now_hour = datetime.now(TZ).hour
@@ -43,10 +38,37 @@ def fetch_forecast() -> dict:
     r.raise_for_status()
     return r.json()
 
+# ── 解析 API 結構（相容新舊格式）────────────────────────────────────
+def get_location_data(data: dict) -> list:
+    """
+    嘗試多種可能的 JSON 結構，自動找到 weatherElement 清單
+    並印出結構摘要供除錯用
+    """
+    records = data.get("records", {})
+    print("=== records 的 keys ===")
+    print(list(records.keys()))
+
+    # 新格式：records -> locations -> [0] -> location -> [0]
+    if "locations" in records:
+        loc = records["locations"][0]["location"][0]
+        print("使用新格式：records.locations[0].location[0]")
+        return loc["weatherElement"]
+
+    # 舊格式：records -> location -> [0]
+    if "location" in records:
+        loc = records["location"][0]
+        print("使用舊格式：records.location[0]")
+        return loc["weatherElement"]
+
+    # 其他未知格式：印出完整結構前500字供排查
+    print("⚠️  未知結構，印出 records 前 500 字：")
+    print(json.dumps(records, ensure_ascii=False)[:500])
+    raise KeyError("無法解析 API 回傳結構，請查看上方 log")
+
 # ── 解析並篩選目標日期 08:00–19:00 ───────────────────────────────────
 def parse(data: dict, target_date) -> dict:
-    location = data["records"]["locations"][0]["location"][0]
-    elements = {e["elementName"]: e["time"] for e in location["weatherElement"]}
+    weather_elements = get_location_data(data)
+    elements = {e["elementName"]: e["time"] for e in weather_elements}
 
     results = {"T": [], "PoP6h": []}
 
@@ -74,7 +96,7 @@ def parse(data: dict, target_date) -> dict:
 
     return results
 
-# ── 統計：最大、最小、平均 ─────────────────────────────────────────────
+# ── 統計 ──────────────────────────────────────────────────────────────
 def stats(values: list) -> dict | None:
     if not values:
         return None
@@ -125,7 +147,6 @@ def main():
     mode = resolve_mode()
     now  = datetime.now(TZ)
 
-    # 決定查詢目標日期
     target_date = (now + timedelta(days=1)).date() if mode == "night" else now.date()
     target_str  = target_date.strftime("%Y/%m/%d")
     label       = "明日" if mode == "night" else "今日"

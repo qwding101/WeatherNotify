@@ -90,25 +90,60 @@ def stats(values: list) -> dict | None:
         "len": len(nums),
     }
 
+# ── 氣溫數值樣式 ──────────────────────────────────────────────────────
+def temp_style(value: float) -> str:
+    if value <= 10:
+        return f'<strong style="color: blue;">{value}°C</strong>'
+    elif value <= 19:
+        return f'<strong>{value}°C</strong>'
+    else:
+        return f'{value}°C'
+
+# ── 降雨機率數值樣式 ──────────────────────────────────────────────────
+def pop_style(value: float) -> str:
+    if value >= 60:
+        return f'<strong style="color: red;">{value}%</strong>'
+    elif value >= 30:
+        return f'<strong>{value}%</strong>'
+    else:
+        return f'{value}%'
+
 # ── 組成 Email 內文 ───────────────────────────────────────────────────
 def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
-    # label = "隔天" if mode == "night" else "當天"
-    lines = [
-        "🌡️ 氣溫",
-        f"  Max: {temp_s['max']['value']}°C　Time: {temp_s['max']['time']}",
-        f"  Min: {temp_s['min']['value']}°C　Time: {temp_s['min']['time']}",
-        f"  Avg: {temp_s['avg']}°C",
-        "",
-        "🌧️ 降雨率",
-        f"  Max: {pop_s['max']['value']}%　Time: {pop_s['max']['time']}",
-        f"  Min: {pop_s['min']['value']}%　Time: {pop_s['min']['time']}",
-        f"  Avg: {pop_s['avg']}%",
-        "",
-        f"資料筆數：氣溫{temp_s['len']} 筆，降雨率{pop_s['len']}筆。",
-        f"預報時地：{target_str}　08:00 – 19:00 台北市大安區",
-    ]
-    return "\n".join(lines)
+    def row(label, value, time):
+        return f"""
+        <tr>
+            <td style="padding: 2px 16px 2px 0; color: #888;">{label}</td>
+            <td style="padding: 2px 16px 2px 0;">{value}</td>
+            <td style="padding: 2px 0; color: #555;">🕐 {time}</td>
+        </tr>"""
 
+    html = f"""
+    <div style="font-family: monospace; font-size: 14px; line-height: 1.8;">
+
+        <div>🌡️ <strong>氣溫</strong></div>
+        <table style="border-collapse: collapse; margin-left: 16px;">
+            {row("Max", temp_style(temp_s["max"]["value"]), temp_s["max"]["time"])}
+            {row("Min", temp_style(temp_s["min"]["value"]), temp_s["min"]["time"])}
+            {row("Avg", temp_style(temp_s["avg"]), "—")}
+        </table>
+
+        <div style="margin-top: 12px;">🌧️ <strong>降雨率</strong></div>
+        <table style="border-collapse: collapse; margin-left: 16px;">
+            {row("Max", pop_style(pop_s["max"]["value"]), pop_s["max"]["time"])}
+            {row("Min", pop_style(pop_s["min"]["value"]), pop_s["min"]["time"])}
+            {row("Avg", pop_style(pop_s["avg"]), "—")}
+        </table>
+
+        <div style="margin-top: 16px; color: #888; font-size: 13px;">
+            資料筆數：氣溫 {temp_s["len"]} 筆，降雨率 {pop_s["len"]} 筆。<br>
+            預報時地：{target_str}　08:00 – 19:00 台北市大安區
+        </div>
+
+    </div>
+    """
+    return html
+    
 # ── 發送 Email ────────────────────────────────────────────────────────
 def send_email(subject: str, body: str) -> None:
     msg = MIMEMultipart()

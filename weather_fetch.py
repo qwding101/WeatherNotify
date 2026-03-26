@@ -46,7 +46,7 @@ def parse(data: dict, target_date) -> dict:
 
     print("取得的氣象元素：", list(elements.keys()))
 
-    results = {"溫度": [], "12小時降雨機率": []}
+    results = {"溫度": [], "3小時降雨機率": []}
 
     for elem_name, time_list in elements.items():
         if elem_name not in results:
@@ -74,7 +74,7 @@ def parse(data: dict, target_date) -> dict:
             })
 
     print(f"氣溫資料筆數：{len(results['溫度'])}")
-    print(f"降雨機率資料筆數：{len(results['12小時降雨機率'])}")
+    print(f"降雨機率資料筆數：{len(results['3小時降雨機率'])}")
     return results
 
 # ── 統計 ──────────────────────────────────────────────────────────────

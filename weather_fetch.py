@@ -38,54 +38,33 @@ def fetch_forecast() -> dict:
     r.raise_for_status()
     return r.json()
 
-# ── 解析 API 結構（相容新舊格式）────────────────────────────────────
-def get_location_data(data: dict) -> list:
-    """
-    嘗試多種可能的 JSON 結構，自動找到 weatherElement 清單
-    並印出結構摘要供除錯用
-    """
-    records = data.get("records", {})
-    print("=== records 的 keys ===")
-    print(list(records.keys()))
-
-    # 新格式：records -> locations -> [0] -> location -> [0]
-    if "locations" in records:
-        loc = records["locations"][0]["location"][0]
-        print("使用新格式：records.locations[0].location[0]")
-        return loc["weatherElement"]
-
-    # 舊格式：records -> location -> [0]
-    if "location" in records:
-        loc = records["location"][0]
-        print("使用舊格式：records.location[0]")
-        return loc["weatherElement"]
-
-    # 其他未知格式：印出完整結構前500字供排查
-    print("⚠️  未知結構，印出 records 前 500 字：")
-    print(json.dumps(records, ensure_ascii=False)[:500])
-    raise KeyError("無法解析 API 回傳結構，請查看上方 log")
-
 # ── 解析並篩選目標日期 08:00–19:00 ───────────────────────────────────
 def parse(data: dict, target_date) -> dict:
-    weather_elements = get_location_data(data)
-    elements = {e["elementName"]: e["time"] for e in weather_elements}
+    # 新版 API 結構：大寫 key
+    location = data["records"]["Locations"][0]["Location"][0]
+    elements = {e["ElementName"]: e["Time"] for e in location["WeatherElement"]}
 
-    results = {"T": [], "PoP6h": []}
+    print("取得的氣象元素：", list(elements.keys()))
+
+    results = {"溫度": [], "12小時降雨機率": []}
 
     for elem_name, time_list in elements.items():
         if elem_name not in results:
             continue
         for slot in time_list:
-            start = datetime.strptime(
-                slot["startTime"], "%Y-%m-%d %H:%M:%S"
-            ).replace(tzinfo=TZ)
+            # 新版時間 key 是 DataTime
+            time_str = slot.get("DataTime") or slot.get("StartTime")
+            start = datetime.fromisoformat(time_str).astimezone(TZ)
 
             if start.date() != target_date:
                 continue
             if not (8 <= start.hour <= 19):
                 continue
 
-            val = slot["elementValue"][0]["value"]
+            # 取出數值（key 名稱依元素而異）
+            val_dict = slot["ElementValue"][0]
+            val = list(val_dict.values())[0]   # 取第一個值，不管 key 叫什麼
+
             if val in ("", None):
                 continue
 
@@ -94,6 +73,8 @@ def parse(data: dict, target_date) -> dict:
                 "value": float(val),
             })
 
+    print(f"氣溫資料筆數：{len(results['溫度'])}")
+    print(f"降雨機率資料筆數：{len(results['12小時降雨機率'])}")
     return results
 
 # ── 統計 ──────────────────────────────────────────────────────────────
@@ -156,12 +137,12 @@ def main():
     raw  = fetch_forecast()
     data = parse(raw, target_date)
 
-    if not data["T"] or not data["PoP6h"]:
+    temp_s = stats(data["溫度"])
+    pop_s  = stats(data["12小時降雨機率"])
+
+    if not temp_s or not pop_s:
         print("⚠️  找不到符合時段的預報資料。")
         return
-
-    temp_s = stats(data["T"])
-    pop_s  = stats(data["PoP6h"])
 
     body    = build_body(temp_s, pop_s, target_str, mode)
     subject = f"🌤 台北大安區{label}天氣預報（{target_str}）"

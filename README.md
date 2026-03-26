@@ -62,7 +62,7 @@ To re-enable, click **"Enable workflow"** from the same location.
 
 
 ## Data source
-[臺灣各鄉鎮市區預報資料-臺灣各鄉鎮市區未來3天(逐3小時)及未來1週天氣預報 (Dataset ID: F-D0047-061)](https://opendata.cwa.gov.tw/dataset/forecast/F-D0047-061)
+[鄉鎮天氣預報-臺北市未來3天天氣預報 (Dataset ID: F-D0047-061)](https://opendata.cwa.gov.tw/dataset/forecast/F-D0047-061)
 
 ## Acknowledgements
 This project was collaboratively developed by the repository owner and Claude AI.

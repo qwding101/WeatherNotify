@@ -136,7 +136,7 @@ def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
         </table>
 
         <div style="margin-top: 16px; color: #888; font-size: 13px;">
-            資料筆數：氣溫 {temp_s["len"]} 筆，降雨率 {pop_s["len"]} 筆。<br>
+            資料筆數：氣溫 {temp_s["len"]}筆，降雨率 {pop_s["len"]}筆。<br>
             預報時地：{target_str}　08:00 – 19:00 台北市大安區
         </div>
 
@@ -150,7 +150,7 @@ def send_email(subject: str, body: str) -> None:
     msg["From"]    = SENDER
     msg["To"]      = RECEIVER
     msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain", "utf-8"))
+    msg.attach(MIMEText(body, "html", "utf-8"))
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(SENDER, PASSWORD)

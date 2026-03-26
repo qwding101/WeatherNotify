@@ -40,7 +40,7 @@ def fetch_forecast() -> dict:
 
 # ── 解析並篩選目標日期 08:00–19:00 ───────────────────────────────────
 def parse(data: dict, target_date) -> dict:
-    # 新版 API 結構：大寫 key
+    
     location = data["records"]["Locations"][0]["Location"][0]
     elements = {e["ElementName"]: e["Time"] for e in location["WeatherElement"]}
 
@@ -52,7 +52,7 @@ def parse(data: dict, target_date) -> dict:
         if elem_name not in results:
             continue
         for slot in time_list:
-            # 新版時間 key 是 DataTime
+            
             time_str = slot.get("DataTime") or slot.get("StartTime")
             start = datetime.fromisoformat(time_str).astimezone(TZ)
 
@@ -111,7 +111,7 @@ def pop_style(value: float) -> str:
 # ── 組成 Email 內文 ───────────────────────────────────────────────────
 def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
     def row(label, value, time):
-        time_cell = f"Time {time}" if time else ""   # ← 有時間顯示 "Time xx:xx"，沒有就留白
+        time_cell = f"Time {time}" if time else ""
         return f"""
         <tr>
             <td style="padding: 2px 16px 2px 0; color: #555;">{label}</td>
@@ -181,7 +181,7 @@ def main():
 
     emoji = "🌧️" if pop_s['max']['value'] >= 30 else ""
     body  = build_body(temp_s, pop_s, target_str, mode)
-    title = f"{emoji}台北大安區{label}（{target_str}）天氣預報"
+    title = f"{emoji}台北大安區{label} ({target_str})天氣預報"
 
     print(body)
     send_email(title, body)

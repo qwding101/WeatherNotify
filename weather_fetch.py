@@ -97,7 +97,7 @@ def temp_style(value: float) -> str:
     elif value <= 19:
         return f'<strong>{value}°C</strong>'
     else:
-        return f'{value}°C'
+        return f'{value}℃'
 
 # ── 降雨機率數值樣式 ──────────────────────────────────────────────────
 def pop_style(value: float) -> str:
@@ -114,13 +114,13 @@ def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
         time_cell = f"Time {time}" if time else ""   # ← 有時間顯示 "Time xx:xx"，沒有就留白
         return f"""
         <tr>
-            <td style="padding: 2px 16px 2px 0; color: #888;">{label}</td>
-            <td style="padding: 2px 16px 2px 0;">{value}</td>
+            <td style="padding: 2px 16px 2px 0; color: #555;">{label}</td>
+            <td style="padding: 2px 16px 2px 0; color: #555;">{value}</td>
             <td style="padding: 2px 0; color: #555;">{time_cell}</td>
         </tr>"""
 
     html = f"""
-    <div style="font-family: monospace; font-size: 14px; line-height: 1.8;">
+    <div style="font-size: 14px; line-height: 1.8;">
 
         <div>🌡️ 氣溫</div>
         <table style="border-collapse: collapse; margin-left: 16px;">

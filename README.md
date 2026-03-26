@@ -15,8 +15,6 @@ Each email includes temperature and precipitation probability statistics for the
 - Minimum value & time of occurrence
 - Average value
 
----
-
 ## Setup Instructions
 
 ### Step 1: Register for a CWA API Key
@@ -49,7 +47,6 @@ Go to your repo → **Settings** → **Secrets and variables** → **Actions** �
 ### Step 5: Manual Test
 Go to **Actions** → **Weather Notify** → **Run workflow** → Enter `morning` or `night` → Click **Run workflow**
 
----
 
 ## Temporarily Disabling the Schedule
 If you need to pause the automation:
@@ -59,12 +56,10 @@ If you need to pause the automation:
 
 To re-enable, click **"Enable workflow"** from the same location.
 
----
 
 ## Email Notification Example
 (TBA)
 
----
 
 ## Data Source
 [Central Weather Administration Open Data Platform](https://opendata.cwa.gov.tw)

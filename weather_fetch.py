@@ -138,7 +138,7 @@ def main():
     data = parse(raw, target_date)
 
     temp_s = stats(data["溫度"])
-    pop_s  = stats(data["12小時降雨機率"])
+    pop_s  = stats(data["3小時降雨機率"])
 
     if not temp_s or not pop_s:
         print("⚠️  找不到符合時段的預報資料。")

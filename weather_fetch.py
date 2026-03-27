@@ -13,7 +13,8 @@ PASSWORD    = os.environ["EMAIL_PASSWORD"]
 RECEIVER    = os.environ["EMAIL_RECEIVER"]
 MANUAL_MODE = os.environ.get("MANUAL_MODE", "")
 
-LOCATION    = "大安區"
+LOCATION_h   = "臺北市"
+LOCATION_l   = "大安區"
 DATASET_ID  = "F-D0047-061"
 BASE_URL    = "https://opendata.cwa.gov.tw/api/v1/rest/datastore"
 TZ          = timezone(timedelta(hours=8))
@@ -40,10 +41,18 @@ def fetch_forecast() -> dict:
 
 # ── 解析並篩選目標日期 08:00–19:00 ───────────────────────────────────
 def parse(data: dict, target_date) -> dict:
-    
-    location = data["records"]["Locations"][0]["Location"][0]
-    elements = {e["ElementName"]: e["Time"] for e in location["WeatherElement"]}
+    # (1) 先找到台北市
+    locations_list = data["records"]["Locations"]
+    taipei = next((loc for loc in locations_list if loc["LocationsName"] == LOCATION_h), None)
+    if taipei is None:
+        raise ValueError(f"找不到{LOCATION_h}的資料")
 
+    # (2) 再找到大安區
+    location = next((loc for loc in taipei["Location"] if loc["LocationName"] == LOCATION_l), None)
+    if location is None:
+        raise ValueError(f"找不到{LOCATION_l}的資料")
+
+    elements = {e["ElementName"]: e["Time"] for e in location["WeatherElement"]}
     print("取得的氣象元素：", list(elements.keys()))
 
     results = {"溫度": [], "3小時降雨機率": []}
@@ -52,7 +61,6 @@ def parse(data: dict, target_date) -> dict:
         if elem_name not in results:
             continue
         for slot in time_list:
-            
             time_str = slot.get("DataTime") or slot.get("StartTime")
             start = datetime.fromisoformat(time_str).astimezone(TZ)
 
@@ -61,9 +69,8 @@ def parse(data: dict, target_date) -> dict:
             if not (8 <= start.hour <= 19):
                 continue
 
-            # 取出數值（key 名稱依元素而異）
             val_dict = slot["ElementValue"][0]
-            val = list(val_dict.values())[0]   # 取第一個值，不管 key 叫什麼
+            val = list(val_dict.values())[0]
 
             if val in ("", None):
                 continue

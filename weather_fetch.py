@@ -116,7 +116,7 @@ def pop_style(value: float) -> str:
 
 # ── 組成 Email 內文 ───────────────────────────────────────────────────
 def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
-    def row(label, value, time):
+    def row(label, value, times):
         time_cell = ("Time " + " / ".join(times)) if times else ""
         return f"""
         <tr>

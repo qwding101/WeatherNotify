@@ -151,7 +151,7 @@ def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
 
         <div style="margin-top: 16px; color: #888; font-size: 13px;">
             資料筆數：氣溫 {temp_s["len"]} 筆，降雨率 {pop_s["len"]} 筆。<br>
-            預報時地：{target_str}　08:00 – 19:00 台北市大安區
+            預報時地：{target_str}　08:00 – 19:00 {LOCATION_h}{LOCATION_l}
         </div>
 
     </div>
@@ -194,7 +194,7 @@ def main():
 
     emoji = "🌧️" if pop_s['max']['value'] >= 30 else ""
     body  = build_body(temp_s, pop_s, target_str, mode)
-    title = f"{emoji}台北大安區{label} ({target_str})天氣預報"
+    title = f"{emoji}{LOCATION_h}{LOCATION_l}{label} ({target_str})天氣預報"
 
     print(body)
     send_email(title, body)

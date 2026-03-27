@@ -31,7 +31,7 @@ def fetch_forecast() -> dict:
     url = f"{BASE_URL}/{DATASET_ID}"
     params = {
         "Authorization": API_KEY,
-        "locationName": LOCATION,
+        "locationName": LOCATION_h,
         "elementName": "T,PoP6h",
         "format": "JSON",
     }

@@ -6,7 +6,7 @@ Automatically fetches weather forecast data from the Central Weather Administrat
 ### Schedule
 | Trigger | Time | Days | Forecast Target |
 |---------|------|------|-----------------|
-| Night | 23:00 (Taiwan Time) | Sun–Thu | **Next day** 08:00–19:00 |
+| Night | 22:45 (Taiwan Time) | Sun–Thu | **Next day** 08:00–19:00 |
 | Morning | 07:00 (Taiwan Time) | Mon–Fri | **Same day** 08:00–19:00 |
 
 ### Notification Content

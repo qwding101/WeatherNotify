@@ -81,11 +81,17 @@ def parse(data: dict, target_date) -> dict:
 def stats(values: list) -> dict | None:
     if not values:
         return None
-    sorted_v = sorted(values, key=lambda x: x["value"])
+
     nums = [x["value"] for x in values]
+    max_val = max(nums)
+    min_val = min(nums)
+
+    max_times = [x["time"] for x in values if x["value"] == max_val]
+    min_times = [x["time"] for x in values if x["value"] == min_val]
+
     return {
-        "min": sorted_v[0],
-        "max": sorted_v[-1],
+        "max": {"value": max_val, "times": max_times},
+        "min": {"value": min_val, "times": min_times},
         "avg": round(sum(nums) / len(nums), 1),
         "len": len(nums),
     }
@@ -111,7 +117,7 @@ def pop_style(value: float) -> str:
 # ── 組成 Email 內文 ───────────────────────────────────────────────────
 def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
     def row(label, value, time):
-        time_cell = f"Time {time}" if time else ""
+        time_cell = ("Time " + " / ".join(times)) if times else ""
         return f"""
         <tr>
             <td style="padding: 2px 16px 2px 0; color: #555;">{label}</td>

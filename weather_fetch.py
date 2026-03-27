@@ -130,15 +130,15 @@ def build_body(temp_s: dict, pop_s: dict, target_str: str, mode: str) -> str:
 
         <div>🌡️ 氣溫</div>
         <table style="border-collapse: collapse; margin-left: 16px;">
-            {row("Max", temp_style(temp_s["max"]["value"]), temp_s["max"]["time"])}
-            {row("Min", temp_style(temp_s["min"]["value"]), temp_s["min"]["time"])}
+            {row("Max", temp_style(temp_s["max"]["value"]), temp_s["max"]["times"])}
+            {row("Min", temp_style(temp_s["min"]["value"]), temp_s["min"]["times"])}
             {row("Avg", temp_style(temp_s["avg"]), "")}
         </table>
 
         <div style="margin-top: 12px;">🌧️ 降雨率</div>
         <table style="border-collapse: collapse; margin-left: 16px;">
-            {row("Max", pop_style(pop_s["max"]["value"]), pop_s["max"]["time"])}
-            {row("Min", pop_style(pop_s["min"]["value"]), pop_s["min"]["time"])}
+            {row("Max", pop_style(pop_s["max"]["value"]), pop_s["max"]["times"])}
+            {row("Min", pop_style(pop_s["min"]["value"]), pop_s["min"]["times"])}
             {row("Avg", pop_style(pop_s["avg"]), "")}
         </table>
 

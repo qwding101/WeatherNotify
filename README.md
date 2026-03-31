@@ -25,7 +25,7 @@ Each email includes temperature and precipitation probability statistics for the
 1. Go to Gmail → Account Settings → Security
 2. Enable **2-Step Verification** if not already enabled
 3. Search for **"App Passwords"** and generate a new 16-character password
-4. Copy the password immediately (it will only be shown once) and remove all spaces. The final format should be 16 consecutive characters: `xxxxxxxxxxxxxxxx`
+4. Copy the password immediately (it will only be shown once) and remove all spaces.
 
 ### Step 3: Create a GitHub repository and upload files
 1. Log in to GitHub and create a new repository (Public or Private)

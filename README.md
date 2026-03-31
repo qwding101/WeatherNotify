@@ -6,7 +6,7 @@ Automatically fetches weather forecast data for Taipei city from the Central Wea
 ### Schedule and notification content
 | Trigger | Time | Days | Forecast Target |
 |---------|---------------------|---------|--------------------------|
-| Night   | 22:45 (Taiwan Time) | Sun–Thu | **Next day** 08:00–19:00 |
+| Night   | 22:00 (Taiwan Time) | Sun–Thu | **Next day** 08:00–19:00 |
 | Morning | 07:00 (Taiwan Time) | Mon–Fri | **Same day** 08:00–19:00 |
 
 Each email includes temperature and precipitation probability statistics for the target time window (08:00–19:00) in Daan District:

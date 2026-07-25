@@ -11,7 +11,7 @@ Automatically fetches weather forecast data for Taipei city from the Central Wea
 
 Note that scheduled emails may occasionally be delayed depending on the status and workload of GitHub's servers.
 
-Each email includes temperature and precipitation probability statistics for the target time window (08:00–19:00) in Daan District:
+Each email includes temperature and precipitation probability summary for the target time window (08:00–19:00) in Daan District:
 - Maximum value and time of occurrence(s)
 - Minimum value and time of occurrence(s)
 - Average value
